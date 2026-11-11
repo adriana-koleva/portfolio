@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="GIS portfolio of Adriana Koleva: spatial analysis, map production and environmental GIS.">
+<title>Adriana Koleva GIS Portfolio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single map-sheet column. Hero with contour lines, a skill-area index that filters, then one "sheet" per project: brief, tasks, skills, figure groups. */
+:root {
+  --paper: #F2F4F1;
+  --surface: #FFFFFF;
+  --ink: #14201C;
+  --muted: #56645E;
+  --line: #D2D9D4;
+  --contour: #C9D3CD;
+  --accent: #0F7A62;
+  --accent-soft: #DCEFE8;
+  --overlay: rgba(10, 16, 14, 0.92);
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F1614; --surface: #16211E; --ink: #E5EDE9; --muted: #9AABA4;
+    --line: #273532; --contour: #22302C; --accent: #45C7A2; --accent-soft: #173A31;
+    --overlay: rgba(4, 8, 7, 0.94); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F1614; --surface: #16211E; --ink: #E5EDE9; --muted: #9AABA4;
+  --line: #273532; --contour: #22302C; --accent: #45C7A2; --accent-soft: #173A31;
+  --overlay: rgba(4, 8, 7, 0.94); color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: var(--paper); color: var(--ink);
+  font-family: var(--body); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+.mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; }
+
+/* HERO */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.hero .wrap { position: relative; padding-block: 72px 56px; display: grid; gap: 22px; }
+.hero .eyebrow { color: var(--muted); text-transform: uppercase; }
+.hero h1 { font-size: clamp(44px, 8vw, 88px); line-height: 0.95; letter-spacing: -0.03em; font-weight: 700; }
+.hero .role { font-family: var(--display); font-weight: 500; font-size: clamp(20px, 2.6vw, 26px); color: var(--accent); }
+.hero .bio { max-width: 60ch; font-size: 18px; color: var(--ink); }
+.hero .avail { display: inline-flex; align-items: center; gap: 10px; width: fit-content;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px 6px 12px; font-size: 14px; font-weight: 500; }
+.hero .avail i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.scalebar { display: flex; align-items: flex-end; gap: 0; margin-top: 8px; color: var(--muted); }
+.scalebar span { display: block; width: 56px; height: 6px; border: 1px solid var(--ink); }
+.scalebar span:nth-child(odd) { background: var(--ink); }
+.scalebar-labels { display: flex; color: var(--muted); }
+.scalebar-labels b { width: 56px; font-weight: 400; }
+
+/* SKILL INDEX */
+.index { padding-block: 44px 8px; display: grid; gap: 18px; }
+.index-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.index-head h2 { font-size: 24px; }
+.areas { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.area {
+  text-align: left; font: inherit; color: inherit; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px 16px 14px; display: grid; gap: 6px; transition: border-color .15s, background .15s;
+}
+.area:hover { border-color: var(--accent); }
+.area:focus-visible, .chip:focus-visible, .fig button:focus-visible, .lb button:focus-visible, .poster-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.area[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.area-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.area-name { font-family: var(--display); font-weight: 700; font-size: 18px; }
+.area-count { white-space: nowrap; color: var(--muted); font-variant-numeric: tabular-nums; }
+.area-desc { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.filter-note { color: var(--muted); font-size: 14px; min-height: 1.6em; }
+.filter-note button { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+/* PROJECT SHEETS */
+.projects { padding-block: 28px 80px; display: grid; gap: 40px; }
+.sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.sheet-head { padding: 28px 28px 22px; display: grid; gap: 14px; border-bottom: 1px solid var(--line); }
+.sheet-meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); text-transform: uppercase; }
+.sheet-meta .kind { color: var(--accent); font-weight: 500; }
+.sheet h2 { font-size: clamp(26px, 3.6vw, 38px); line-height: 1.1; letter-spacing: -0.015em; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 13px/1 var(--body); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; cursor: pointer; }
+.chip:hover { border-color: var(--accent); }
+
+.sheet-body { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 0; }
+.brief { padding: 24px 28px 28px; display: grid; gap: 18px; align-content: start; min-width: 0; }
+.brief .summary { font-size: 17px; max-width: 64ch; }
+.brief h3, .side h3 { font-family: var(--mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.tasks { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.tasks li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; }
+.tasks li::before { content: ""; width: 8px; height: 8px; margin-top: 9px; border: 2px solid var(--accent); border-radius: 50%; }
+.side { padding: 24px 28px 28px; border-left: 1px solid var(--line); display: grid; gap: 22px; align-content: start; min-width: 0; }
+.skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.skills span { font-size: 13px; background: var(--accent-soft); color: var(--ink); border-radius: 6px; padding: 4px 8px; }
+.facts { margin: 8px 0 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; font-size: 14px; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; margin-top: 8px; }
+.stat { border: 1px solid var(--line); border-radius: 8px; padding: 10px 10px 8px; }
+.stat b { display: block; font-family: var(--display); font-size: 24px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat small { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; margin-top: 3px; }
+.poster-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; text-decoration: none; color: var(--accent); }
+.poster-link:hover { text-decoration: underline; }
+
+/* FIGURES */
+.figures { border-top: 1px solid var(--line); padding: 24px 28px 30px; display: grid; gap: 30px; }
+.group { display: grid; gap: 12px; }
+.group-head { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.group-head h4 { margin: 0; font-family: var(--display); font-size: 18px; font-weight: 700; }
+.group-head p { color: var(--muted); font-size: 14px; }
+.grid { columns: 3 240px; column-gap: 12px; }
+.fig { break-inside: avoid; margin: 0 0 12px; }
+.fig button { display: block; width: 100%; padding: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--paper); cursor: zoom-in; }
+.fig img { display: block; width: 100%; height: auto; transition: transform .3s ease; }
+.fig button:hover img { transform: scale(1.02); }
+.fig figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.45; }
+
+/* LIGHTBOX */
+.lb { position: fixed; inset: 0; z-index: 50; background: var(--overlay); display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) max(16px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 16px) max(16px, env(safe-area-inset-left, 0px)); }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #E5EDE9; }
+.lb button { font: 500 14px var(--body); color: #E5EDE9; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+.lb button:hover { background: rgba(255,255,255,0.16); }
+.lb-stage { display: grid; place-items: center; min-height: 0; padding-block: 12px; }
+.lb-stage img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #fff; }
+.lb-cap { color: #E5EDE9; text-align: center; max-width: 80ch; margin: 0 auto; font-size: 15px; }
+.lb-nav { display: flex; gap: 8px; }
+
+footer { border-top: 1px solid var(--line); padding-block: 26px 40px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 760px) {
+  .sheet-head, .brief, .side, .figures { padding-left: 18px; padding-right: 18px; }
+  .sheet-body { grid-template-columns: minmax(0, 1fr); }
+  .side { border-left: 0; border-top: 1px solid var(--line); }
+  .hero .wrap { padding-block: 48px 40px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+
+<header class="hero">
+  <canvas id="contours" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="eyebrow mono">GIS portfolio</div>
+    <h1>Adriana<br>Koleva</h1>
+    <div class="role">Spatial analysis · Map production · Environmental GIS</div>
+    <p class="bio">I turn spatial data into decisions: screening analyses for infrastructure projects, climate-risk assessments and clear, publication-ready maps. This portfolio brings together my professional work at Bovic, freelance commissions and GIS studies at Lund University.</p>
+    <div class="avail"><i></i>Available for freelance GIS work</div>
+    <div aria-hidden="true">
+      <div class="scalebar"><span></span><span></span><span></span><span></span></div>
+      <div class="scalebar-labels mono"><b>0</b><b>5</b><b>10</b><b>15</b><b>20 km</b></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="wrap index" aria-labelledby="idx-title">
+    <div class="index-head">
+      <h2 id="idx-title">What I do</h2>
+      <span class="mono" style="color:var(--muted)">Select an area to filter projects</span>
+    </div>
+    <div class="areas" id="areas"></div>
+    <div class="filter-note" id="filter-note" aria-live="polite"></div>
+  </section>
+
+  <section class="wrap projects" id="projects" aria-label="Projects"></section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Adriana Koleva · GIS portfolio</span>
+    <span class="mono">Updated November 2026</span>
+  </div>
+</footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Figure viewer">
+  <div class="lb-bar">
+    <span class="mono" id="lb-count"></span>
+    <div class="lb-nav">
+      <button id="lb-prev" type="button">← Prev</button>
+      <button id="lb-next" type="button">Next →</button>
+      <button id="lb-close" type="button">Close</button>
+    </div>
+  </div>
+  <div class="lb-stage"><img id="lb-img" alt=""></div>
+  <p class="lb-cap" id="lb-cap"></p>
+</div>
+
+<script src="projects.js"></script>
+<script>
+/* ============================================================
+   RENDERING
+   ============================================================ */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let active = null;
+let flat = [];
+
+function renderAreas() {
+  const used = Object.keys(AREAS).filter(k => PROJECTS.some(p => p.areas.includes(k)));
+  $("#areas").innerHTML = used.map(k => {
+    const n = PROJECTS.filter(p => p.areas.includes(k)).length;
+    return `<button class="area" type="button" data-area="${k}" aria-pressed="${active === k}">
+      <span class="area-top"><span class="area-name">${esc(AREAS[k].name)}</span><span class="area-count mono">${n} ${n === 1 ? "project" : "projects"}</span></span>
+      <span class="area-desc">${esc(AREAS[k].desc)}</span></button>`;
+  }).join("");
+  $("#filter-note").innerHTML = active
+    ? `Showing ${esc(AREAS[active].name.toLowerCase())} projects. <button type="button" id="clear">Show all projects</button>`
+    : "";
+}
+
+function renderProjects() {
+  const list = PROJECTS.filter(p => !active || p.areas.includes(active));
+  flat = [];
+  $("#projects").innerHTML = list.map(p => {
+    const stats = p.stats ? `<div><h3>Key results</h3><div class="stats">${p.stats.map(([v, l]) => `<div class="stat"><b>${esc(v)}</b><small>${esc(l)}</small></div>`).join("")}</div></div>` : "";
+    const poster = p.poster ? `<a class="poster-link" href="${p.poster.href}" target="_blank" rel="noopener">${esc(p.poster.label)} ↗</a>` : "";
+    const groups = p.groups.map(g => `
+      <div class="group">
+        <div class="group-head"><h4>${esc(g.title)}</h4>${g.note ? `<p>${esc(g.note)}</p>` : ""}</div>
+        <div class="grid">${g.figs.map(([file, cap]) => {
+          const i = flat.push({ src: `img/${file}.jpg`, cap, project: p.title }) - 1;
+          return `<figure class="fig"><button type="button" data-i="${i}" aria-label="Enlarge: ${esc(cap)}"><img src="img/${file}.jpg" alt="${esc(cap)}" loading="lazy"></button><figcaption>${esc(cap)}</figcaption></figure>`;
+        }).join("")}</div>
+      </div>`).join("");
+    return `<article class="sheet" id="${p.id}">
+      <div class="sheet-head">
+        <div class="sheet-meta mono"><span class="kind">${esc(p.kind)}</span>${p.meta.map(m => `<span>${esc(m)}</span>`).join("")}</div>
+        <h2>${esc(p.title)}</h2>
+        <div class="chips">${p.areas.map(a => `<button class="chip" type="button" data-area="${a}">${esc(AREAS[a].name)}</button>`).join("")}</div>
+      </div>
+      <div class="sheet-body">
+        <div class="brief">
+          <p class="summary">${esc(p.summary)}</p>
+          <div><h3>What I did</h3><ul class="tasks">${p.tasks.map(t => `<li><span>${esc(t)}</span></li>`).join("")}</ul></div>
+        </div>
+        <aside class="side">
+          ${stats}
+          <div><h3>Skills applied</h3><div class="skills">${p.skills.map(s => `<span>${esc(s)}</span>`).join("")}</div></div>
+          <div><h3>Facts</h3><dl class="facts">${p.facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl></div>
+          ${poster}
+        </aside>
+      </div>
+      <div class="figures">${groups}</div>
+    </article>`;
+  }).join("");
+}
+
+function setArea(k) {
+  active = active === k ? null : k;
+  renderAreas(); renderProjects();
+  $("#idx-title").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+document.addEventListener("click", e => {
+  const a = e.target.closest("[data-area]");
+  if (a) return setArea(a.dataset.area);
+  if (e.target.id === "clear") return setArea(active);
+  const f = e.target.closest("[data-i]");
+  if (f) openLb(+f.dataset.i);
+});
+
+/* LIGHTBOX */
+let cur = 0, lastFocus = null;
+function showLb() {
+  const it = flat[cur];
+  $("#lb-img").src = it.src; $("#lb-img").alt = it.cap;
+  $("#lb-cap").textContent = it.cap;
+  $("#lb-count").textContent = `${cur + 1} / ${flat.length} · ${it.project}`;
+}
+function openLb(i) { lastFocus = document.activeElement; cur = i; showLb(); $("#lb").hidden = false; $("#lb-close").focus(); }
+function closeLb() { $("#lb").hidden = true; if (lastFocus) lastFocus.focus(); }
+function step(d) { cur = (cur + d + flat.length) % flat.length; showLb(); }
+$("#lb-close").onclick = closeLb;
+$("#lb-prev").onclick = () => step(-1);
+$("#lb-next").onclick = () => step(1);
+$("#lb").addEventListener("click", e => { if (e.target.classList.contains("lb-stage")) closeLb(); });
+document.addEventListener("keydown", e => {
+  if ($("#lb").hidden) return;
+  if (e.key === "Escape") closeLb();
+  if (e.key === "ArrowLeft") step(-1);
+  if (e.key === "ArrowRight") step(1);
+});
+
+/* CONTOUR BACKGROUND */
+function drawContours() {
+  const c = $("#contours"), r = c.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+  c.width = r.width * dpr; c.height = r.height * dpr;
+  const g = c.getContext("2d"); g.scale(dpr, dpr);
+  g.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--contour").trim();
+  const peaks = [[r.width * 0.86, r.height * 0.32, 1.2, 0.7], [r.width * 0.62, r.height * 1.05, 0.9, 2.1]];
+  peaks.forEach(([cx, cy, k, ph]) => {
+    for (let n = 1; n <= 26; n++) {
+      const base = n * 17;
+      g.lineWidth = n % 5 === 0 ? 1.4 : 0.8;
+      g.beginPath();
+      for (let t = 0; t <= 200; t++) {
+        const a = (t / 200) * Math.PI * 2;
+        const rr = base * (1 + 0.09 * Math.sin(3 * a + ph + n * 0.08) + 0.06 * Math.sin(5 * a - ph * k + n * 0.05) + 0.03 * Math.sin(9 * a + n * 0.2));
+        const x = cx + rr * Math.cos(a) * 1.25, y = cy + rr * Math.sin(a);
+        t ? g.lineTo(x, y) : g.moveTo(x, y);
+      }
+      g.stroke();
+    }
+  });
+}
+renderAreas(); renderProjects(); drawContours();
+addEventListener("resize", drawContours);
+try { matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawContours); } catch (e) {}
+new MutationObserver(drawContours).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>
+
+</body>
+</html>
